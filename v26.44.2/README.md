@@ -42,7 +42,7 @@ UI, the CLI, a control channel and an MCP server all share.
 - **Local-first:** no account, no cloud, no telemetry, no subscription. The network is used only for things you turn on.
 - **Non-destructive:** originals are never touched; edits live in the catalog and, if you like, in XMP sidecars.
 - **Drivable end to end by AI agents** over MCP, with undo for everything they do.
-- **Open source** (MIT). It is a fork of an open-source project; its copyright notices are kept in [NOTICE](NOTICE)
+- **Open source** (MIT). Chromaforge is a fork of an open-source project; its copyright notices are kept in [NOTICE](NOTICE)
   and [LICENSE](LICENSE).
 
 ## Contents
@@ -205,6 +205,35 @@ option to start it. For unattended installs: `msiexec /i <binary>-<ver>-windows-
 Linux ARM64 (aarch64) builds are paused; `packaging/linux/package.sh aarch64` still builds one locally.
 
 ### Android (early: see [docs/android.md](docs/android.md))
+
+The Android app is the same app as the desktop one, with the same catalog, raw developer and edits, in a
+**touch layout** made first for tablets and foldables (it works on phones too). Develop shows the photo alone; tap
+it for a slim top bar and a tool strip, pick a tool (Basic, Colour, Tone, Detail, Optics, Effects) and drag on the
+photo to set one slider at a time, then Done or Cancel; hold the photo to see the original. Swipe to scroll,
+long-press to select several photos, and Back steps out one level at a time. Import photos, a folder or the camera
+roll; export from the Export sheet to Pictures or share to another app.
+
+The touch layout is on by default on Android and available on every platform: **Settings ▸ General ▸ Layout**
+switches between Touch and Desktop (the choice is remembered).
+
+The app collects nothing and works offline; see the [privacy policy](PRIVACY.md) for the few features that go
+online and what the Android permissions are for.
+
+<table>
+<tr>
+<td width="62%"><img src="docs/images/touch/tablet-develop.jpg" alt="Touch layout on a tablet in landscape: a sunset photo filling the screen, a slim top bar with undo, compare, filmstrip, history, panel and share buttons, and a tool strip at the bottom"><br><sub><b>Tablet.</b> Photo first, tools at the bottom.</sub></td>
+<td width="38%" rowspan="2"><img src="docs/images/touch/phone-library.jpg" alt="Touch layout on a phone in portrait: the Library grid with two columns of demo photos"><br><sub><b>Phone.</b> The Library grid.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/images/touch/tablet-adjust.jpg" alt="Adjust mode: the Basic tool's sliders as chips under the photo, Shadows selected and shown as +35 at the top"><br><sub><b>Adjust.</b> Drag on the photo to set the chosen slider.</sub></td>
+</tr>
+<tr>
+<td><img src="docs/images/touch/tablet-settings.jpg" alt="Touch Settings with the Layout row (Touch / Desktop) at the top of General"><br><sub><b>Settings.</b> Layout switches Touch / Desktop.</sub></td>
+<td><img src="docs/images/touch/tablet-export.jpg" alt="The touch Export sheet: JPEG full size, JPEG 2048 px for sharing or TIFF, long edge and quality buttons, and an Export button"><br><sub><b>Export.</b> Save to Pictures or share.</sub></td>
+</tr>
+</table>
+
+Install from the release's APKs:
 
 | Build | File | Notes |
 |---|---|---|
@@ -382,8 +411,8 @@ through the same entry point. An agent can cull a shoot, develop it, mask a sky 
 
 - **Pure Rust, no C.** Our own RAW decoders (DNG, Canon CR2/CR3, Sony ARW, Nikon NEF, Fujifilm RAF incl. X-Trans,
   Panasonic RW2 / Leica RWL, Pentax PEF, Olympus ORF), our own colour science, our own pipeline. JPEG, PNG, TIFF, WebP,
-  PSD composites and JPEG XL open today; HEIC/HEIF photos too with `--features heif` (HEVC is a build-time choice,
-  as in PhotoCraft).
+  PSD composites, JPEG XL and HEIC/HEIF (iPhone photos) open today (HEVC stays a build-time choice: the `heif`
+  feature is on by default and can be turned off).
 - **Scene-referred & wide-gamut.** Linear Rec.2020 float internally, Bradford-adapted white balance, gamut mapping
   instead of clipping, a filmic shoulder for raw and pixel-exact pass-through for JPEGs you haven't touched.
 - **Resolution-independent edits.** Radii and brush sizes are relative to the image, so a 400 px preview, your
@@ -419,7 +448,7 @@ The app is young and moving fast. **Where we honestly stand** (details in the [r
 - **As a day-to-day Lightroom replacement we're nearer 60–70%.** It's great for JPEG/DNG and most Nikon / Sony /
   older-Canon raws on one machine.
 - **The biggest gaps:**
-  - **camera colour calibration:** Sony, Nikon, Panasonic, Fujifilm and Canon CR3 raws have guarded estimates from their camera JPEGs, with built-in profiles for eleven bodies (ILCA-99M2, ILCE-7CR, ILCE-7M4, X-H2S, X-T4, Nikon Z 6II, Z 8, D5300, D750, D780, D90), matrices fitted to measured spectral sensitivities for 52 more (Profile ▸ Calibrated camera colour), and your own `.dcp` camera profiles import; a measured calibration database of our own is missing, and other raws retain a neutral matrix;
+  - **camera colour calibration:** Sony, Nikon, Panasonic, Fujifilm and Canon CR3 raws have guarded estimates from their camera JPEGs, with built-in profiles for twelve bodies (ILCA-99M2, ILCE-7CR, ILCE-7M4, ILCE-7RM5, X-H2S, X-T4, Nikon Z 6II, Z 8, D5300, D750, D780, D90), matrices fitted to measured spectral sensitivities for 52 more (Profile ▸ Calibrated camera colour), dcraw's matrices for about 550 more models, and your own `.dcp` camera profiles import; colour-chart and Lightroom-matched calibration tools exist, but a measured calibration database of our own is still missing;
   - **per-model raw verification:** 596 of 1,446 models (41%) are verified on real files, so about 7 in 8 photographers shoot a verified body; other bodies are unverified, see [docs/raw-parity.md](docs/raw-parity.md);
   - **AI quality:** Subject / Background (BiRefNet) and Object (SAM 3) masks are optional downloads; sky is still heuristic, denoise quality is unverified;
   - **network libraries:** a preview reads the raw's header and its embedded JPEG only (56.5 MB → 5.9 MB, 10 s → 1 s on the test share), but the *developed* picture still needs the sensor data over the wire; see [docs/raw-preview-reads.md](docs/raw-preview-reads.md);
@@ -435,7 +464,7 @@ The app is young and moving fast. **Where we honestly stand** (details in the [r
 | Masking: brush (A/B presets, density), linear, radial, luminance/colour range, per-mask feather and Curve, add/subtract/intersect; AI Subject / Background (BiRefNet) and Object (SAM 3), optional downloads | ✅ |
 | Crop, straighten tool + auto straighten, flip, rotate, aspect ratios, overlays | ✅ |
 | Profiles (Color, Neutral, Vivid, Landscape, Portrait, Monochrome: our own looks), presets, versions, history, copy/paste/sync settings and metadata, Auto Sync, per-photo Auto | ✅ |
-| Camera colour: DNG files use their own matrices; import your own `.dcp` profiles | ✅ DNG, `.dcp` import · 🟡 built-in profiles for eleven bodies, spectral matrices for 52 more; measured calibration database missing |
+| Camera colour: DNG files use their own matrices; import your own `.dcp` profiles | ✅ DNG, `.dcp` import · 🟡 built-in profiles for eleven bodies, spectral matrices for 52 more, dcraw matrices for ~550; chart / Lightroom calibration tools; measured calibration database missing |
 | Native macOS menu bar (generated from the command registry), control channel + every widget addressable, headless UI snapshots | ✅ |
 | RAW: DNG, CR2, CR3 (lossless CRX Bayer and version 0x100/0x200 C-RAW), ARW, NEF (uncompressed + lossless/lossy compressed), Fujifilm RAF (uncompressed + lossless/lossy compressed, Bayer + X-Trans), Panasonic RW2 / Leica RWL / Panasonic RAW (every raw format, DMC-LX1 to DC-S1RM2), Pentax PEF, Olympus ORF (uncompressed + compressed), Samsung SRW (uncompressed + compressed), CR3 tiled C-RAW, Minolta MRW, Sony ARW v1, packed NEF, SuperCCD RAF, Canon CRW, Epson ERF, Mamiya MEF; AVIF import; embedded previews for every format incl. CR3; 596 models verified | 🟡 · per-model verification continues |
 | Detail: sharpening, luminance + colour noise reduction | ✅ · AI Denoise, Super Resolution ⬜ |
@@ -448,7 +477,7 @@ The app is young and moving fast. **Where we honestly stand** (details in the [r
 | Output: Print (printer ICC, intent, BPC, Print Adjustment, 16-bit, `ipps://`, driver options), Book (PDF, pair kerning), Slideshow (PDF/JPEG/video with music), Web (HTML galleries, SFTP), publish services with grid sections | ✅ |
 | MCP server (headless or live app, persistent libraries), CLI, control channel | ✅ |
 | XMP sidecars (read/write, auto-write), reading `crs:` develop settings, preset files (`.lcpreset`, XMP presets) | ✅ |
-| Optics (distortion, vignetting, auto + manual CA, defringe, lens corrections embedded in DNG files and Panasonic / Leica RW2 / RWL distortion data), Geometry (transforms, Constrain Crop), Upright (Auto/Level/Vertical/Full/Guided) | ✅ · lensfun-format lens database set up or downloaded from Settings ▸ Lens profiles 🟡 · lens profiles of our own ⬜ |
+| Optics (distortion, vignetting, auto + manual CA, defringe, lens corrections embedded in DNG files and Panasonic / Leica RW2 / RWL distortion data), Geometry (transforms, Constrain Crop), Upright (Auto/Level/Vertical/Full/Guided) | ✅ · lensfun-format lens database set up or downloaded from Settings ▸ Lens profiles, with a lens picker for manual or misnamed lenses 🟡 · lens profiles of our own ⬜ |
 | Photo Merge: HDR (auto-align, deghost), Panorama (spherical/cylindrical/perspective, boundary warp, auto crop), HDR Panorama → DNG | ✅ |
 | GPU pipeline (wgpu compute, CPU-exact within 1/255), CPU fallback on device limits / errors | ✅ · WebGPU in the browser 🚧 |
 | Video: MP4/MOV/MKV/WebM/TS/MXF decode (H.264, HEVC, VP9, AV1, ProRes, DNxHR, APV, MPEG-2), playback, trim, poster frame, Capture Frame, global grading, H.264 / ProRes export with audio | 🟡 · local adjustments and hardware decode on video ⬜ |
@@ -468,8 +497,10 @@ egui frontend is one swappable crate; nothing below it knows a UI exists. `mcp` 
 
 Humans and agents follow the same rules, so read [AGENTS.md](AGENTS.md) first. The short version:
 
-- **Clean-room.** Never read Adobe binaries or GPL raw/photo code (darktable, RawTherapee, LibRaw, rawspeed, dcraw…);
-  work from public specs and black-box observation.
+- **Clean-room.** Never read Adobe binaries or GPL / LGPL raw and photo code (darktable, RawTherapee, LibRaw,
+  rawspeed…); work from public specs and black-box observation. One exception: dcraw's functions outside its
+  RESTRICTED (Foveon) block, which its author releases free for all uses, may serve as a reference under the dcraw
+  reference policy in [AGENTS.md](AGENTS.md#clean-room-sources-in-addition-to-the-non-negotiables).
 - **No Adobe assets, ever:** no icons, screenshots, presets, profiles, LUTs or fonts from Adobe products. Every
   image, icon and font in the repo is original, public domain, Creative Commons, OFL or permissively licensed, and has
   an entry in [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md) added in the same commit. New fonts go to
@@ -480,12 +511,18 @@ Humans and agents follow the same rules, so read [AGENTS.md](AGENTS.md) first. T
   `unsafe`, checked indexing on anything derived from input, and a regression test with every crash fix. Details in
   [AGENTS.md](AGENTS.md#never-crash-outranks-feature-work).
 
+To take something on, claim its issue with a comment and open a pull request with `Fixes #123` in the description;
+[CONTRIBUTING.md](CONTRIBUTING.md) has the whole workflow. Questions, ideas or a bug you'd like to talk through
+first? [Join the Discord](https://discord.gg/c3dfYATzsQ) and bring them to [the project's channel](https://discord.com/channels/1359579021108842617/1559361045468942346).
+
 
 ## Licence and credits
 
 The app is licensed under the [MIT License](LICENSE), except `crates/segment` and `crates/fetch`, which are
 Apache-2.0 only. It is a fork of an open-source project; that project's copyright notices and required
 third-party notices are in [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+Privacy: the app collects no data; see [PRIVACY.md](PRIVACY.md).
 
 Bundled fonts, icons, images and other assets keep their own open licenses; each one is listed
 with its author, source and license in [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md).
