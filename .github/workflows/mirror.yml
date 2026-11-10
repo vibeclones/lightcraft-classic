@@ -29,6 +29,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UPSTREAM: emmertex/lightcraft-classic
           NAME: lightcraft-classic
+          # The project was renamed ChromaForge at v26.45.0 and has named its web zips chromaforge-web-<version>.zip since.
+          LEGACY_NAME: chromaforge
           TAG: ${{ inputs.tag }}
           LIMIT: ${{ inputs.limit || '40' }}
         run: bash scripts/mirror.sh
